@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ category.name }} | {% if site_settings %}{{ site_settings.name }}{% else %}Portfolio{% endif %}{% endblock %}
+{% block meta_description %}Explore our blog posts in the {{ category.name }} category. {% endblock %}
+{% block content %}
+  <!-- Header -->
+  <section class="relative py-20 bg-primary-800 text-white">
+    <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/3585090/pexels-photo-3585090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center opacity-20"></div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ category.name }}</h1>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-xl text-gray-100">
+          Explore our blog posts in the {{ category.name }} category.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Posts -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        {% if posts %}
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in posts %}
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll" style="animation-delay: {{ forloop.counter }}00ms;">
+                <a href="{{ post.get_absolute_url }}">
+                  <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-6">
+                  <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-3">
+                    <span class="lucide lucide-calendar w-4 h-4 mr-1"></span>
+                    <time
+                      datetime="{{ post.published_date|date:'Y-m-d' }}">
+                      {{ post.published_date|date:"F j, Y" }}
+                    </time>
+                  </div>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                        <a href="{{ post.get_absolute_url }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition">
+                        {{ post.title }}
+                        </a>
+                    </h2>
+                    {% if post.subtitle %}
+                      <p class="text-gray-600 dark:text-gray-400 mb-4">{{ post.subtitle }}</p>
+                    {% endif %}
+                    <p class="text-gray-500 dark:text-gray-400 mb-4">{{ post.content|truncatewords:20 }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="text-primary-600 dark:text-primary-400 hover:underline">Read more</a>
+                </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <p class="text-gray-600 dark:text-gray-400">No posts found in this category.</p>
+            </div>
+            {% endif %}
+        </div>
+      </div>
+    </section>
+  <!-- Pagination -->
+    <section class="py-8 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto flex justify-center">
+            {% if is_paginated %}
+            <nav class="flex items-center space-x-4">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="text-primary-600 dark:text-primary-400 hover:underline">Previous</a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="text-primary-600 dark:text-primary-400 hover:underline">Next</a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </div>
+        </div>
+    </section>
+
+{% endblock  %}

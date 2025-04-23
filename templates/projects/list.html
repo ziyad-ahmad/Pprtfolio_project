@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Header -->
+  <section class="relative py-20 bg-primary-800 text-white">
+    <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/270360/pexels-photo-270360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center opacity-20"></div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">My Projects</h1>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-xl text-gray-100">
+          A showcase of my work and contributions
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Categories -->
+  <section class="py-8 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="{% url 'projects:list' %}" class="{% if request.path == '/projects/' %}bg-primary-600 text-white{% else %}bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200{% endif %} px-4 py-2 rounded-lg transition hover:bg-primary-100 dark:hover:bg-primary-900">
+          All Projects
+        </a>
+        
+        {% for category in categories %}
+          <a href="{{ category.get_absolute_url }}" class="{% if request.path == category.get_absolute_url %}bg-primary-600 text-white{% else %}bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200{% endif %} px-4 py-2 rounded-lg transition hover:bg-primary-100 dark:hover:bg-primary-900">
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Grid -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      {% if projects %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for project in projects %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll" style="animation-delay: {{ forloop.counter }}00ms;">
+              <div class="relative h-60 overflow-hidden">
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full h-full object-cover">
+                {% if project.is_featured %}
+                  <div class="absolute top-4 right-4 bg-accent-500 text-gray-900 text-xs font-bold px-2 py-1 rounded">
+                    Featured
+                  </div>
+                {% endif %}
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ project.title }}</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">{{ project.description|truncatewords:20 }}</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {% for category in project.categories.all|slice:":3" %}
+                    <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">
+                      {{ category.name }}
+                    </span>
+                  {% endfor %}
+                </div>
+                <a href="{{ project.get_absolute_url }}" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                  View Details
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+          <div class="mt-12 flex justify-center">
+            <div class="inline-flex rounded-md shadow-sm">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-l-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                  Previous
+                </a>
+              {% endif %}
+              
+              {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                  <span class="px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-primary-600 hover:bg-primary-700">
+                    {{ num }}
+                  </span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <a href="?page={{ num }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    {{ num }}
+                  </a>
+                {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-r-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                  Next
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="text-center py-12 animate-on-scroll">
+          <span class="lucide lucide-folder w-16 h-16 mx-auto text-gray-400 dark:text-gray-600"></span>
+          <h3 class="mt-4 text-xl font-medium text-gray-900 dark:text-white">No projects found</h3>
+          <p class="mt-2 text-gray-500 dark:text-gray-400">Check back later for updates or try a different category.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 bg-gradient-to-r from-primary-800 to-primary-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6 animate-on-scroll">Have a project in mind?</h2>
+      <p class="text-xl text-gray-100 max-w-2xl mx-auto mb-8 animate-on-scroll" style="animation-delay: 100ms;">
+        I'm always open to new opportunities and exciting projects. Let's discuss how we can work together.
+      </p>
+      <a href="{% url 'contact' %}" class="inline-block bg-white text-primary-800 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition transform hover:scale-105 animate-on-scroll" style="animation-delay: 200ms;">
+        Get In Touch
+      </a>
+    </div>
+  </section>
+{% endblock %}

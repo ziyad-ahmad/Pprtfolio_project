@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} | {% if site_settings %}{{ site_settings.name }}{% else %}Portfolio{% endif %}{% endblock %}
+
+{% block meta_description %}{% if post.meta_description %}{{ post.meta_description }}{% else %}{{ post.content|truncatewords:30 }}{% endif %}{% endblock %}
+
+{% block content %}
+  <!-- Blog Header -->
+  <section class="relative pt-20 pb-12 bg-primary-800 text-white">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-700/80 z-0"></div>
+    <div class="absolute inset-0 bg-[url('{{ post.featured_image.url }}')] bg-cover bg-center mix-blend-overlay z-[-1]"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="mb-6 flex flex-wrap justify-center gap-2">
+          {% for category in post.categories.all %}
+            <a href="{{ category.get_absolute_url }}" class="inline-block bg-accent-500 text-gray-900 text-sm font-medium px-3 py-1 rounded-full hover:bg-accent-400 transition">
+              {{ category.name }}
+            </a>
+          {% endfor %}
+        </div>
+        
+        <h1 class="text-3xl md:text-5xl font-bold mb-3">{{ post.title }}</h1>
+        
+        {% if post.subtitle %}
+          <p class="text-xl md:text-2xl text-gray-200 mb-6 font-serif italic">{{ post.subtitle }}</p>
+        {% endif %}
+        
+        <div class="flex justify-center items-center text-gray-300 mt-8">
+          <div class="flex items-center">
+            <span class="lucide lucide-calendar mr-2"></span>
+            <time datetime="{{ post.published_date|date:'Y-m-d' }}">
+              {{ post.published_date|date:"F j, Y" }}
+            </time>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Content -->
+  <section class="py-12 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto">
+        <div class="prose prose-lg dark:prose-invert max-w-none mb-12">
+          {{ post.content|linebreaks }}
+        </div>
+        
+        <!-- Tags -->
+        {% if post.tags.all %}
+          <div class="flex flex-wrap gap-2 border-t border-gray-200 dark:border-gray-700 pt-6 my-8">
+            {% for tag in post.tags.all %}
+              <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">
+                #{{ tag.name }}
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        <!-- Share Buttons -->
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-6 my-8">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Share this article</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.title }}" target="_blank" rel="noopener noreferrer" class="bg-[#1DA1F2] text-white p-2 rounded-full hover:opacity-80 transition">
+              <span class="lucide lucide-twitter w-5 h-5"></span>
+            </a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}" target="_blank" rel="noopener noreferrer" class="bg-[#0A66C2] text-white p-2 rounded-full hover:opacity-80 transition">
+              <span class="lucide lucide-linkedin w-5 h-5"></span>
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="bg-[#1877F2] text-white p-2 rounded-full hover:opacity-80 transition">
+              <span class="lucide lucide-facebook w-5 h-5"></span>
+            </a>
+            <button onclick="copyToClipboard('{{ request.build_absolute_uri }}')" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+              <span class="lucide lucide-link w-5 h-5"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Posts -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-10">Related Articles</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {% for related in related_posts %}
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+              <a href="{{ related.get_absolute_url }}">
+                <img src="{{ related.featured_image.url }}" alt="{{ related.title }}" class="w-full h-40 object-cover">
+              </a>
+              <div class="p-4">
+                <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-2">
+                  <span class="lucide lucide-calendar w-4 h-4 mr-1"></span>
+                  <time datetime="{{ related.published_date|date:'Y-m-d' }}">
+                    {{ related.published_date|date:"F j, Y" }}
+                  </time>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  <a href="{{ related.get_absolute_url }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition">
+                    {{ related.title }}
+                  </a>
+                </h3>
+                
+                <a href="{{ related.get_absolute_url }}" class="text-primary-600 dark:text-primary-400 font-medium inline-flex items-center hover:underline transition">
+                  Read more
+                  <span class="lucide lucide-arrow-right ml-1"></span>
+                </a>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-span-3 text-center py-8">
+              <p class="text-gray-600 dark:text-gray-400">No related articles found.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next/Previous Article Navigation -->
+  <section class="py-10 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto flex justify-between items-center">
+        <a href="{% url 'blog:list' %}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition">
+          <span class="flex items-center">
+            <span class="lucide lucide-arrow-left mr-2"></span>
+            Back to Blog
+          </span>
+        </a>
+        
+        <a href="{% url 'contact' %}" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition">
+          <span class="flex items-center">
+            Contact Me
+            <span class="lucide lucide-arrow-right ml-2"></span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert('Link copied to clipboard!');
+    }, function(err) {
+      console.error('Could not copy text: ', err);
+    });
+  }
+</script>
+{% endblock %}

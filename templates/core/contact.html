@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <!-- Header -->
+  <section class="relative py-20 bg-primary-800 text-white">
+    <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center opacity-20"></div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Contact Me</h1>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-xl text-gray-100">
+          Have a question or want to work together? Reach out!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="animate-on-scroll">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Get in Touch</h2>
+          <p class="text-lg text-gray-700 dark:text-gray-300 mb-8">
+            I'm interested in freelance opportunities and collaborations. If you have a project that needs attention or any questions, feel free to reach out.
+          </p>
+          
+          <div class="space-y-6">
+            {% if site_settings and site_settings.email %}
+              <div class="flex items-start space-x-4">
+                <span class="text-primary-600 dark:text-primary-400 mt-1">
+                  <span class="lucide lucide-mail w-6 h-6"></span>
+                </span>
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Email</h3>
+                  <a href="mailto:{{ site_settings.email }}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">
+                    {{ site_settings.email }}
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+            
+            <div class="flex items-start space-x-4">
+              <span class="text-primary-600 dark:text-primary-400 mt-1">
+                <span class="lucide lucide-map-pin w-6 h-6"></span>
+              </span>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Location</h3>
+                <p class="text-gray-700 dark:text-gray-300">
+                  San Francisco, CA
+                </p>
+              </div>
+            </div>
+            
+            <div class="flex items-start space-x-4">
+              <span class="text-primary-600 dark:text-primary-400 mt-1">
+                <span class="lucide lucide-clock w-6 h-6"></span>
+              </span>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">Working Hours</h3>
+                <p class="text-gray-700 dark:text-gray-300">
+                  Monday - Friday: 9am - 5pm PST
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-10">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Connect on Social Media</h3>
+            <div class="flex space-x-6">
+              {% if site_settings and site_settings.github %}
+                <a href="{{ site_settings.github }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition">
+                  <span class="lucide lucide-github w-6 h-6"></span>
+                </a>
+              {% endif %}
+              {% if site_settings and site_settings.linkedin %}
+                <a href="{{ site_settings.linkedin }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition">
+                  <span class="lucide lucide-linkedin w-6 h-6"></span>
+                </a>
+              {% endif %}
+              {% if site_settings and site_settings.twitter %}
+                <a href="{{ site_settings.twitter }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition">
+                  <span class="lucide lucide-twitter w-6 h-6"></span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl shadow-lg animate-on-scroll" style="animation-delay: 200ms;">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send a Message</h2>
+          
+          <form method="post" class="space-y-6">
+            {% csrf_token %}
+            {% crispy form %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section (Optional) -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800 hidden">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Find Me</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+      </div>
+      
+      <div class="rounded-xl overflow-hidden shadow-lg h-80 animate-on-scroll">
+        <!-- Placeholder for map - In a real project, you'd integrate Google Maps or similar -->
+        <div class="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+          <span class="text-gray-600 dark:text-gray-400">Map would be displayed here</span>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

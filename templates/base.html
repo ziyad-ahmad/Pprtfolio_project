@@ -1,0 +1,307 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% if site_settings %}
+    <title>{% block title %}{{ site_settings.name }} | {{ site_settings.title }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description }}{% endblock %}">
+    <meta name="keywords" content="{{ site_settings.meta_keywords }}">
+    {% else %}
+    <title>{% block title_default %}Portfolio{% endblock %}</title>
+    {% endif %}
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#E6F0FF',
+                            100: '#CCE0FF',
+                            200: '#99C2FF',
+                            300: '#66A3FF',
+                            400: '#3385FF',
+                            500: '#0066FF',
+                            600: '#0052CC',
+                            700: '#003D99',
+                            800: '#002966',
+                            900: '#001433',
+                        },
+                        accent: {
+                            50: '#E6FFFE',
+                            100: '#CCFFFC',
+                            200: '#99FFF9',
+                            300: '#66FFF7',
+                            400: '#33FFF4',
+                            500: '#00FFF1',
+                            600: '#00CCC1',
+                            700: '#009991',
+                            800: '#006660',
+                            900: '#003330',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    container: {
+                        center: true,
+                        padding: '1.5rem',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-in-out',
+                        'slide-down': 'slideDown 0.4s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        };
+    </script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-icons@0.344.0/dist/umd/lucide.min.css">
+    
+    <!-- Custom styles -->
+    <style>
+        /* Base styles */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            line-height: 1.2;
+        }
+        
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+        }
+        
+        /* Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom utility classes */
+        .text-balance {
+            text-wrap: balance;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="flex flex-col min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm">
+        <div class="container mx-auto py-4">
+            <nav class="flex items-center justify-between">
+                <a href="{% url 'home' %}" class="text-2xl font-bold text-primary-700 dark:text-primary-300 flex items-center gap-2">
+                    <span class="lucide lucide-code text-accent-600 dark:text-accent-400"></span>
+                    {% if site_settings %}{{ site_settings.name }}{% else %}Portfolio{% endif %}
+                </a>
+                
+                <!-- Mobile menu button -->
+                <button type="button" class="md:hidden" id="mobile-menu-button">
+                    <span class="lucide lucide-menu"></span>
+                </button>
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="{% url 'home' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:underline underline-offset-4 transition">Home</a>
+                    <a href="{% url 'about' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:underline underline-offset-4 transition">About</a>
+                    <a href="{% url 'projects:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:underline underline-offset-4 transition">Projects</a>
+                    <a href="{% url 'blog:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:underline underline-offset-4 transition">Blog</a>
+                    <a href="{% url 'contact' %}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition">Contact</a>
+                </div>
+            </nav>
+            
+            <!-- Mobile menu (hidden by default) -->
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="flex flex-col space-y-4 mt-4 pb-4">
+                    <a href="{% url 'home' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Home</a>
+                    <a href="{% url 'about' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">About</a>
+                    <a href="{% url 'projects:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Projects</a>
+                    <a href="{% url 'blog:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Blog</a>
+                    <a href="{% url 'contact' %}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg inline-block transition w-full text-center">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-grow">
+        {% if messages %}
+            <div class="container mx-auto mt-4">
+                {% for message in messages %}
+                    <div class="p-4 mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100{% elif message.tags == 'error' %}bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100{% else %}bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100{% endif %} rounded-lg">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-800 py-8 mt-12">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">
+                        {% if site_settings %}{{ site_settings.name }}{% else %}Portfolio{% endif %}
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">
+                        {% if site_settings %}{{ site_settings.bio_short|truncatewords:30 }}{% else %}A portfolio showcasing my work and skills.{% endif %}
+                    </p>
+                    <div class="flex space-x-4">
+                        {% if site_settings and site_settings.github %}
+                            <a href="{{ site_settings.github }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition">
+                                <span class="lucide lucide-github"></span>
+                            </a>
+                        {% endif %}
+                        {% if site_settings and site_settings.linkedin %}
+                            <a href="{{ site_settings.linkedin }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition">
+                                <span class="lucide lucide-linkedin"></span>
+                            </a>
+                        {% endif %}
+                        {% if site_settings and site_settings.twitter %}
+                            <a href="{{ site_settings.twitter }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition">
+                                <span class="lucide lucide-twitter"></span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'home' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">About</a></li>
+                        <li><a href="{% url 'projects:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Projects</a></li>
+                        <li><a href="{% url 'blog:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Blog</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Contact</h3>
+                    {% if site_settings and site_settings.email %}
+                        <p class="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
+                            <span class="lucide lucide-mail"></span>
+                            <a href="mailto:{{ site_settings.email }}" class="hover:text-primary-600 dark:hover:text-primary-400 transition">{{ site_settings.email }}</a>
+                        </p>
+                    {% endif %}
+                    <a href="{% url 'contact' %}" class="inline-block mt-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition">Get in touch</a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; {% now "Y" %} {% if site_settings %}{{ site_settings.name }}{% else %}Portfolio{% endif %}. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Dark mode toggle -->
+    <button class="dark-mode-toggle bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+        <span class="lucide lucide-sun dark:hidden"></span>
+        <span class="lucide lucide-moon hidden dark:block"></span>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize icons
+        lucide.createIcons();
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Dark mode toggle
+        const darkModeToggle = document.querySelector('.dark-mode-toggle');
+        
+        // Check for dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled' || 
+            (localStorage.getItem('darkMode') !== 'disabled' && 
+             window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('darkMode', 'disabled');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('darkMode', 'enabled');
+            }
+        });
+        
+        // Scroll animations
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+        
+        const animateOnScroll = () => {
+            animateElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight * 0.9) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

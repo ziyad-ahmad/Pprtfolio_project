@@ -1,0 +1,444 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Header -->
+  <section class="relative py-20 bg-primary-800 text-white">
+    <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center opacity-20"></div>
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-xl text-gray-100">
+          Learn more about my journey, skills, and what drives me.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bio Section -->
+  <section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="animate-on-scroll">
+          <img src="{% if site_settings and site_settings.profile_image %}{{ site_settings.profile_image.url }}{% else %}https://images.pexels.com/photos/5976591/pexels-photo-5976591.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2{% endif %}" 
+               alt="Profile" class="rounded-lg shadow-xl w-full max-w-md mx-auto">
+        </div>
+        
+        <div class="animate-on-scroll" style="animation-delay: 200ms;">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">My Story</h2>
+          
+          <div class="prose prose-lg dark:prose-invert mb-6">
+            {% if site_settings %}
+              <p>{{ site_settings.bio_long|linebreaks }}</p>
+            {% else %}
+              <p>
+                I'm a passionate software developer with over 5 years of experience building web applications and services. 
+                My journey in technology began when I discovered my love for problem-solving and creating digital experiences that make a difference.
+              </p>
+              <p>
+                Throughout my career, I've worked on a variety of projects ranging from e-commerce platforms to complex data visualization tools. 
+                I'm particularly interested in creating intuitive user interfaces backed by robust and scalable backend systems.
+              </p>
+              <p>
+                When I'm not coding, you can find me hiking, reading science fiction, or experimenting with new technologies. 
+                I believe in continuous learning and sharing knowledge with the community.
+              </p>
+            {% endif %}
+          </div>
+          
+          <div class="flex space-x-4">
+            {% if site_settings and site_settings.resume %}
+              <a href="{{ site_settings.resume.url }}" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition" target="_blank" rel="noopener noreferrer">
+                Download Resume
+              </a>
+            {% endif %}
+            <a href="{% url 'contact' %}" class="inline-block bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-2 px-6 rounded-lg transition">
+              Contact Me
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Skills & Expertise</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          Here are the technologies and tools I specialize in
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {% if skills %}
+          {% regroup skills by get_category_display as skill_categories %}
+          {% for category in skill_categories %}
+            <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll" style="animation-delay: {{ forloop.counter }}00ms;">
+              <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">{{ category.grouper }}</h3>
+              <div class="space-y-4">
+                {% for skill in category.list %}
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-gray-800 dark:text-gray-200">{{ skill.name }}</span>
+                      <span class="text-gray-600 dark:text-gray-400">{{ skill.proficiency }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                      <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: {{ skill.proficiency }}%"></div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Placeholder skill categories -->
+          <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll">
+            <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Frontend</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">HTML/CSS</span>
+                  <span class="text-gray-600 dark:text-gray-400">95%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">JavaScript</span>
+                  <span class="text-gray-600 dark:text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">React</span>
+                  <span class="text-gray-600 dark:text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">TailwindCSS</span>
+                  <span class="text-gray-600 dark:text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll" style="animation-delay: 200ms;">
+            <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Backend</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Python</span>
+                  <span class="text-gray-600 dark:text-gray-400">92%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 92%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Django</span>
+                  <span class="text-gray-600 dark:text-gray-400">88%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 88%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Node.js</span>
+                  <span class="text-gray-600 dark:text-gray-400">75%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">RESTful APIs</span>
+                  <span class="text-gray-600 dark:text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll" style="animation-delay: 300ms;">
+            <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Database</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">PostgreSQL</span>
+                  <span class="text-gray-600 dark:text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">MySQL</span>
+                  <span class="text-gray-600 dark:text-gray-400">80%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">MongoDB</span>
+                  <span class="text-gray-600 dark:text-gray-400">75%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Redis</span>
+                  <span class="text-gray-600 dark:text-gray-400">70%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll" style="animation-delay: 400ms;">
+            <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">DevOps</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Docker</span>
+                  <span class="text-gray-600 dark:text-gray-400">80%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Git</span>
+                  <span class="text-gray-600 dark:text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">CI/CD</span>
+                  <span class="text-gray-600 dark:text-gray-400">75%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">AWS</span>
+                  <span class="text-gray-600 dark:text-gray-400">70%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md animate-on-scroll" style="animation-delay: 500ms;">
+            <h3 class="text-xl font-bold text-primary-700 dark:text-primary-400 mb-4">Design</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">UI/UX</span>
+                  <span class="text-gray-600 dark:text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Figma</span>
+                  <span class="text-gray-600 dark:text-gray-400">80%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Responsive Design</span>
+                  <span class="text-gray-600 dark:text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-gray-800 dark:text-gray-200">Accessibility</span>
+                  <span class="text-gray-600 dark:text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div class="bg-primary-600 dark:bg-primary-400 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Education & Experience -->
+  <section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Education & Experience</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          My academic background and professional journey
+        </p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto">
+        <!-- Experience Timeline -->
+        <div class="relative">
+          <!-- Timeline line -->
+          <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700 transform md:translate-x-[-0.5px]"></div>
+          
+          <!-- Experience Items -->
+          <div class="space-y-12">
+            <!-- Experience 1 -->
+            <div class="relative">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Senior Software Developer</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">TechCorp Inc.</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2023 - Present</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Leading development of enterprise applications using Django and React.
+                    </p>
+                  </div>
+                </div>
+                <div class="hidden md:block md:w-1/2"></div>
+                <!-- Timeline dot -->
+                <div class="absolute left-0 md:left-1/2 top-6 w-6 h-6 rounded-full bg-primary-600 border-4 border-white dark:border-gray-900 transform md:translate-x-[-50%] shadow"></div>
+              </div>
+            </div>
+            
+            <!-- Experience 2 -->
+            <div class="relative">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 md:hidden mb-4">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll" style="animation-delay: 200ms;">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Software Developer</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">InnovateSoft</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2020 - 2023</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Developed and maintained web applications for clients across various industries.
+                    </p>
+                  </div>
+                </div>
+                <div class="hidden md:block md:w-1/2"></div>
+                <div class="md:w-1/2 md:pl-8">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll" style="animation-delay: 200ms;">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Software Developer</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">InnovateSoft</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2020 - 2023</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Developed and maintained web applications for clients across various industries.
+                    </p>
+                  </div>
+                </div>
+                <!-- Timeline dot -->
+                <div class="absolute left-0 md:left-1/2 top-6 w-6 h-6 rounded-full bg-primary-600 border-4 border-white dark:border-gray-900 transform md:translate-x-[-50%] shadow"></div>
+              </div>
+            </div>
+            
+            <!-- Experience 3 -->
+            <div class="relative">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 md:pr-8 md:text-right mb-4 md:mb-0">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll" style="animation-delay: 300ms;">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Junior Developer</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">StartupX</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2018 - 2020</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Built frontend interfaces and backend APIs for a SaaS product.
+                    </p>
+                  </div>
+                </div>
+                <div class="hidden md:block md:w-1/2"></div>
+                <!-- Timeline dot -->
+                <div class="absolute left-0 md:left-1/2 top-6 w-6 h-6 rounded-full bg-primary-600 border-4 border-white dark:border-gray-900 transform md:translate-x-[-50%] shadow"></div>
+              </div>
+            </div>
+            
+            <!-- Education -->
+            <div class="relative">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 md:hidden mb-4">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll" style="animation-delay: 400ms;">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">BS Computer Science</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">Tech University</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2014 - 2018</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Graduated with honors, specializing in software engineering.
+                    </p>
+                  </div>
+                </div>
+                <div class="hidden md:block md:w-1/2"></div>
+                <div class="md:w-1/2 md:pl-8">
+                  <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-md animate-on-scroll" style="animation-delay: 400ms;">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">BS Computer Science</h3>
+                    <h4 class="text-primary-600 dark:text-primary-400 font-medium">Tech University</h4>
+                    <p class="text-gray-600 dark:text-gray-400">2014 - 2018</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">
+                      Graduated with honors, specializing in software engineering.
+                    </p>
+                  </div>
+                </div>
+                <!-- Timeline dot -->
+                <div class="absolute left-0 md:left-1/2 top-6 w-6 h-6 rounded-full bg-accent-500 border-4 border-white dark:border-gray-900 transform md:translate-x-[-50%] shadow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 bg-gradient-to-r from-primary-800 to-primary-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6 animate-on-scroll">Ready to start a project?</h2>
+      <p class="text-xl text-gray-100 max-w-2xl mx-auto mb-8 animate-on-scroll" style="animation-delay: 100ms;">
+        Let's work together to bring your ideas to life. I'm always open to new opportunities and challenges.
+      </p>
+      <a href="{% url 'contact' %}" class="inline-block bg-white text-primary-800 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition transform hover:scale-105 animate-on-scroll" style="animation-delay: 200ms;">
+        Get In Touch
+      </a>
+    </div>
+  </section>
+{% endblock %}

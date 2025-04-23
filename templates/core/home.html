@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-900/90 to-primary-700/80 z-0"></div>
+    <div class="absolute inset-0 bg-[url('https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center mix-blend-overlay z-[-1]"></div>
+    
+    <div class="container mx-auto px-4 z-10">
+      <div class="max-w-3xl text-white">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4 animate-slide-down">
+          {% if site_settings %}Hi, I'm {{ site_settings.name }}{% else %}Portfolio{% endif %}
+        </h1>
+        <h2 class="text-2xl md:text-3xl text-gray-200 mb-6 animate-slide-down" style="animation-delay: 100ms;">
+          {% if site_settings %}{{ site_settings.title }}{% else %}Software Developer{% endif %}
+        </h2>
+        <p class="text-xl text-gray-100 mb-8 animate-slide-down" style="animation-delay: 200ms;">
+          {% if site_settings %}{{ site_settings.bio_short }}{% else %}A passionate developer focused on creating beautiful, functional websites and applications.{% endif %}
+        </p>
+        <div class="flex flex-wrap gap-4 animate-slide-down" style="animation-delay: 300ms;">
+          <a href="{% url 'projects:list' %}" class="bg-accent-500 hover:bg-accent-600 text-gray-900 font-medium py-3 px-6 rounded-lg transition transform hover:scale-105">
+            View My Work
+          </a>
+          <a href="{% url 'contact' %}" class="bg-transparent hover:bg-white/10 border-2 border-white text-white font-medium py-3 px-6 rounded-lg transition transform hover:scale-105">
+            Contact Me
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+      <a href="#about" class="flex flex-col items-center">
+        <span class="text-sm mb-2">Scroll Down</span>
+        <span class="lucide lucide-chevron-down"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">About Me</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          {% if site_settings %}{{ site_settings.bio_short }}{% else %}I'm a passionate software developer with a focus on creating intuitive user experiences and robust backend systems.{% endif %}
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="animate-on-scroll">
+          <img src="{% if site_settings and site_settings.profile_image %}{{ site_settings.profile_image.url }}{% else %}https://images.pexels.com/photos/5976591/pexels-photo-5976591.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2{% endif %}" 
+               alt="Profile" class="rounded-lg shadow-xl w-full h-auto object-cover aspect-ratio-4/3">
+        </div>
+        
+        <div class="animate-on-scroll" style="animation-delay: 200ms;">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">My Skills</h3>
+          
+          {% if skills_by_category %}
+            <div class="space-y-8">
+              {% for category, skills in skills_by_category.items %}
+                <div>
+                  <h4 class="text-xl font-semibold text-primary-700 dark:text-primary-400 mb-3">{{ category }}</h4>
+                  <div class="flex flex-wrap gap-2">
+                    {% for skill in skills %}
+                      <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">
+                        {{ skill.name }}
+                      </span>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="space-y-6">
+              <div>
+                <h4 class="text-xl font-semibold text-primary-700 dark:text-primary-400 mb-3">Frontend</h4>
+                <div class="flex flex-wrap gap-2">
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">HTML/CSS</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">JavaScript</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">React</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">Tailwind CSS</span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-xl font-semibold text-primary-700 dark:text-primary-400 mb-3">Backend</h4>
+                <div class="flex flex-wrap gap-2">
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">Python</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">Django</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">Node.js</span>
+                  <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          
+          <div class="mt-8">
+            <a href="{% url 'about' %}" class="text-primary-600 dark:text-primary-400 font-medium inline-flex items-center hover:underline transition">
+              Learn more about me
+              <span class="lucide lucide-arrow-right ml-1"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section class="py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Featured Projects</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          Check out some of my recent work
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% if featured_projects %}
+          {% for project in featured_projects %}
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll" style="animation-delay: {{ forloop.counter|add:2 }}00ms;">
+              <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="w-full h-48 object-cover">
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ project.title }}</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">{{ project.description|truncatewords:20 }}</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {% for category in project.categories.all|slice:":3" %}
+                    <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">
+                      {{ category.name }}
+                    </span>
+                  {% endfor %}
+                </div>
+                <a href="{{ project.get_absolute_url }}" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                  View Project
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <!-- Placeholder projects -->
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll">
+            <img src="https://images.pexels.com/photos/5926393/pexels-photo-5926393.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="E-commerce Website" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">E-commerce Website</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4">A fully responsive e-commerce platform with integrated payment processing.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">Django</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">PostgreSQL</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">Stripe</span>
+              </div>
+              <a href="#" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                View Project
+              </a>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll" style="animation-delay: 300ms;">
+            <img src="https://images.pexels.com/photos/6802042/pexels-photo-6802042.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Task Management App" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Task Management App</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4">A collaborative task management system with real-time updates.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">React</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">Django REST</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">WebSockets</span>
+              </div>
+              <a href="#" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                View Project
+              </a>
+            </div>
+          </div>
+          
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105 animate-on-scroll" style="animation-delay: 400ms;">
+            <img src="https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Analytics Dashboard" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Analytics Dashboard</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4">Interactive data visualization dashboard for business analytics.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">Python</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">D3.js</span>
+                <span class="bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded text-xs">Django</span>
+              </div>
+              <a href="#" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                View Project
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="{% url 'projects:list' %}" class="inline-block bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-3 px-6 rounded-lg transition transform hover:scale-105">
+          View All Projects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Section -->
+  <section class="py-20 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Latest Articles</h2>
+        <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+        <p class="text-lg text-gray-700 dark:text-gray-300">
+          Thoughts, tutorials, and insights
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <!-- Placeholder blog posts -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition animate-on-scroll">
+          <span class="text-xs text-gray-500 dark:text-gray-400">May 15, 2025</span>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2 mb-3">Getting Started with Django and Tailwind CSS</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">Learn how to set up a Django project with Tailwind CSS for rapid UI development.</p>
+          <a href="{% url 'blog:list' %}" class="text-primary-600 dark:text-primary-400 font-medium inline-flex items-center hover:underline transition">
+            Read Article
+            <span class="lucide lucide-arrow-right ml-1"></span>
+          </a>
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition animate-on-scroll" style="animation-delay: 200ms;">
+          <span class="text-xs text-gray-500 dark:text-gray-400">April 28, 2025</span>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2 mb-3">Best Practices for Django Models</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">Optimize your Django models for better performance and maintainability.</p>
+          <a href="{% url 'blog:list' %}" class="text-primary-600 dark:text-primary-400 font-medium inline-flex items-center hover:underline transition">
+            Read Article
+            <span class="lucide lucide-arrow-right ml-1"></span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <a href="{% url 'blog:list' %}" class="inline-block bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-3 px-6 rounded-lg transition transform hover:scale-105">
+          View All Articles
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="py-24 bg-gradient-to-r from-primary-800 to-primary-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6 animate-on-scroll">Interested in working together?</h2>
+      <p class="text-xl text-gray-100 max-w-2xl mx-auto mb-8 animate-on-scroll" style="animation-delay: 100ms;">
+        I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision.
+      </p>
+      <a href="{% url 'contact' %}" class="inline-block bg-white text-primary-800 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition transform hover:scale-105 animate-on-scroll" style="animation-delay: 200ms;">
+        Get In Touch
+      </a>
+    </div>
+  </section>
+{% endblock %}
