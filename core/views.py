@@ -17,7 +17,7 @@ class HomeView(TemplateView):
         # Get featured projects (limit to 3)
         context['featured_projects'] = Project.objects.filter(
             is_featured=True
-        ).order_by('-date_completed')[:3]
+        ).order_by('-date_completed')[:5]
         
         # Get skills grouped by category
         skills = Skills.objects.all()

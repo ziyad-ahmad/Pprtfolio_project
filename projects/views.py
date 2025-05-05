@@ -30,7 +30,6 @@ class ProjectDetailView(DetailView):
         context['related_projects'] = related
         return context
 
-
 class CategoryProjectsView(ListView):
     template_name = 'projects/category.html'
     context_object_name = 'projects'
